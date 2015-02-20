@@ -2,32 +2,39 @@ import sys
 import requests
 import pymongo
 
-xuid_api = 'https://xboxapi.com/v2/xuid/'
-base_api = 'https://xboxapi.com/v2/'
+XUID_API = 'https://xboxapi.com/v2/xuid/'
+BASE_API = 'https://xboxapi.com/v2/'
 
-if len(sys.argv) != 3:
-    exit("Wrong number of arguments")
 
-user = sys.argv[1]
-api_key = sys.argv[2]
+def main():
 
-xuid_url = xuid_api + user
+    if len(sys.argv) != 3:
+        exit("Wrong number of arguments")
 
-xauth = {'X-AUTH': api_key}
+    user = sys.argv[1]
+    api_key = sys.argv[2]
 
-r = requests.get(xuid_url, headers=xauth)
+    xuid_url = XUID_API + user
 
-xuid = r.text
+    xauth = {'X-AUTH': api_key}
 
-if 'error_code' in xuid:
-    print "error"
-    sys.exit(-1)
+    r = requests.get(xuid_url, headers=xauth)
 
-friends_url = base_api + xuid + '/friends'
+    xuid = r.text
 
-friends = requests.get(friends_url, headers=xauth)
+    if 'error_code' in xuid:
+        print "error"
+        sys.exit(-1)
 
-friends = friends.json()
+    friends_url = BASE_API + xuid + '/friends'
 
-for f in friends:
-    print f['Gamertag']
+    friends = requests.get(friends_url, headers=xauth)
+
+    friends = friends.json()
+
+    for f in friends:
+        print f['Gamertag']
+
+
+if __name__ == "__main__":
+    main()
